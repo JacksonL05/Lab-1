@@ -1,14 +1,17 @@
-from machine import Pin
-from utime import sleep
-
-pin = Pin(15, Pin.OUT)
-
-print("LED starts flashing...")
-while True:
-    try:
-        pin.toggle()
-        sleep(1) # sleep 1sec
-    except KeyboardInterrupt:
-        break
-pin.off()
-print("Finished.")
+from machine import Pin, PWM
+import time
+#set PWM Parameters
+pwm = PWM(Pin(15))
+pwm.freq(10000)
+try:
+    while True:
+        #Range of pwm 16 bits (0-65535)
+        for i in range(0, 65535):
+            pwm.duty_u16(i)
+        time.sleep_us(100)
+        for i in range(65535, 0, -1):
+            pwm.duty_u16(i)
+            time.sleep_us(100)
+except:
+     #turn pwm off
+    pwm.deinit()
